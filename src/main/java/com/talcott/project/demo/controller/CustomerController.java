@@ -26,6 +26,19 @@ public class CustomerController {
         return custService.saveCustomer(custDetailDto);
     }
 
+    @PutMapping("/customer/update")
+    public ResponseEntity<String> updateCustomerDetails(@RequestBody CustomerDetails custDetailDto) {
+        logger.info("In updateCustomerDetails method in CustomerController custDetailsDto :: ", custDetailDto.toString());
+        return custService.updateCustomer(custDetailDto);
+    }
+
+    @DeleteMapping("/customer/delete/{id}")
+    public void deleteCustomerDetails(@PathVariable Long id) {
+        logger.info("In deleteCustomerDetails method in CustomerController id :: ", id);
+        custService.deleteCustomer(id);
+    }
+
+
     @GetMapping("/customer/{id}")
     public ResponseEntity<Object> fetchCustomerById(@PathVariable Long id) {
         logger.info("In fetchCustomerById method in CustomerController id :: ", id);

@@ -34,6 +34,31 @@ public class CustomerService {
     }
 
     @Transactional
+    public ResponseEntity<String> updateCustomer(CustomerDetails customerDetails) {
+        logger.info(" In updateCustomer method in CustomerService customerDetails ::", customerDetails);
+        CustomerDetails custDetail = custRepo.findById(customerDetails.getId()).isPresent() ? (CustomerDetails) custRepo.findById(customerDetails.getId()).get() : null;
+        if (Objects.nonNull(custDetail) && custDetail.getId() != null) {
+            custRepo.delete(custDetail);
+            CustomerDetails updatedCustDetail = (CustomerDetails) custRepo.save(customerDetails);
+            if(Objects.nonNull( updatedCustDetail)) {
+                return new ResponseEntity<>(updatedCustDetail.getId().toString(), HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>("Object is not Updated", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @Transactional
+    public ResponseEntity<Object> deleteCustomer(Long id) {
+
+        logger.info("In deleteCustomer method in CustomerService id ::", id);
+        if (custRepo.existsById(id)) {
+            custRepo.deleteById(id);
+            return new ResponseEntity<>( HttpStatus.OK);
+        }
+        logger.error("Id Not Found");
+        return new ResponseEntity<>("Id doesn't exist", HttpStatus.BAD_REQUEST);
+    }
+
+    @Transactional
     public ResponseEntity<Object> fetchCustomerById(Long id) {
         CustomerDetails customerDetails = custRepo.findById(id).isPresent() ? (CustomerDetails) custRepo.findById(id).get() : null;
         logger.info("In fetchCustomerById method in CustomerService customerDetails ::", customerDetails);
